@@ -31,8 +31,6 @@ const Details = () => (
 );
 
 const Home = () => {
-  //   const [error, setError] = useState<any>(null);
-  //   const [data, setData] = useState<FeedItem[]>([]);
   const isDarkMode = useColorScheme() === 'dark';
   const {isLoading, error, data} = useQuery<FeedItem[], Error>('rssFeed', () =>
     fetch(URL)
@@ -45,22 +43,6 @@ const Home = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  //   useEffect(() => {
-  //     const fetchData = () => {
-  //       fetch(URL)
-  //         .then(response => response.text())
-  //         .then(xml => parse(xml))
-  //         .then(parsed => {
-  //           setData(parsed.items);
-  //           setError(null);
-  //         })
-  //         .catch(e => {
-  //           console.log('error: ', e);
-  //           setError(e);
-  //         });
-  //     };
-  //     fetchData();
-  //   }, []);
   if (isLoading) {
     return (
       <SafeAreaView style={backgroundStyle}>
