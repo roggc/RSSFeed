@@ -64,7 +64,9 @@ const Home = () => {
       {data && (
         <ScrollView>
           {data.map(d => (
-            <ItemContainer key={d.id} onPress={() => navigate('Details')}>
+            <ItemContainer
+              key={d.id}
+              onPress={() => navigate('Details', {data: d})}>
               <Text>{d.title}</Text>
             </ItemContainer>
           ))}
