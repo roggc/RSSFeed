@@ -21,14 +21,10 @@ import {parse, FeedItem} from 'react-native-rss-parser';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import styled from '@emotion/native';
 import {useQuery} from 'react-query';
+import {useNavigation} from '@react-navigation/native';
+import {HomeScreenNavigationProp} from './types';
 
 const URL = 'https://www.xatakandroid.com/tag/feeds/rss2.xml';
-
-const Details = () => (
-  <View>
-    <Text>you are seeing details screen</Text>
-  </View>
-);
 
 const Home = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -38,6 +34,7 @@ const Home = () => {
       .then(xml => parse(xml))
       .then(parsed => parsed.items),
   );
+  const {navigate} = useNavigation<HomeScreenNavigationProp>();
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -67,7 +64,7 @@ const Home = () => {
       {data && (
         <ScrollView>
           {data.map(d => (
-            <ItemContainer key={d.id}>
+            <ItemContainer key={d.id} onPress={() => navigate('Details')}>
               <Text>{d.title}</Text>
             </ItemContainer>
           ))}
@@ -77,7 +74,7 @@ const Home = () => {
   );
 };
 
-const ItemContainer = styled.View`
+const ItemContainer = styled.TouchableOpacity`
   margin: 10px;
 `;
 

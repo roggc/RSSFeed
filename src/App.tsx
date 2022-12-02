@@ -12,11 +12,13 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {QueryClient, QueryClientProvider} from 'react-query';
-import Home from './src/Home';
+import Home from './Home';
+import Details from './Details';
+import {RootStackParamsList} from './types';
 
 const queryClient = new QueryClient();
 
-const {Navigator, Screen} = createNativeStackNavigator();
+const {Navigator, Screen} = createNativeStackNavigator<RootStackParamsList>();
 
 const App = () => {
   return (
@@ -24,6 +26,7 @@ const App = () => {
       <NavigationContainer>
         <Navigator>
           <Screen component={Home} name="Home" />
+          <Screen component={Details} name="Details" />
         </Navigator>
       </NavigationContainer>
     </QueryClientProvider>
