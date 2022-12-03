@@ -9,25 +9,22 @@
  */
 
 import React, {useEffect} from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  useColorScheme,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import {StatusBar, useColorScheme, ScrollView, Text, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from './types';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchRSSFeed} from './redux/actions/rssFeed';
+import {Dispatch} from './App';
+import {AppState} from './redux/configureStore';
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const {data, isFetching, error} = useSelector(state => state.RSSFeed);
-  const {isConnected} = useSelector(state => state.network);
+  const dispatch = useDispatch<Dispatch>();
+  const {data, isFetching, error} = useSelector(
+    (state: AppState) => state.RSSFeed,
+  );
+  const {isConnected} = useSelector((state: AppState) => state.network);
 
   useEffect(() => {
     isConnected && dispatch(fetchRSSFeed());
@@ -43,16 +40,16 @@ const Home = () => {
 
   if (isFetching) {
     return (
-      <SafeAreaView style={backgroundStyle}>
+      <View style={backgroundStyle}>
         <View>
           <Text>loading...</Text>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <View style={backgroundStyle}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
@@ -78,7 +75,7 @@ const Home = () => {
           ))}
         </ScrollView>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

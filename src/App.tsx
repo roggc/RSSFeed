@@ -22,6 +22,8 @@ import {ReduxNetworkProvider} from 'react-native-offline';
 const {store, persistor} = configureStore();
 const {Navigator, Screen} = createNativeStackNavigator<RootStackParamsList>();
 
+export type Dispatch = typeof store.dispatch;
+
 const App = () => (
   <NavigationContainer>
     <Navigator>
