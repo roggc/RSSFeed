@@ -27,10 +27,11 @@ import {fetchRSSFeed} from './redux/actions/rssFeed';
 const Home = () => {
   const dispatch = useDispatch();
   const {data, isFetching, error} = useSelector(state => state.RSSFeed);
+  const {isConnected} = useSelector(state => state.network);
 
   useEffect(() => {
-    dispatch(fetchRSSFeed());
-  }, [dispatch]);
+    isConnected && dispatch(fetchRSSFeed());
+  }, [dispatch, isConnected]);
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -56,6 +57,11 @@ const Home = () => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+      {!isConnected && (
+        <View>
+          <Text>you are offline</Text>
+        </View>
+      )}
       {error && (
         <ErrorContainer>
           <Text>{error.message}</Text>

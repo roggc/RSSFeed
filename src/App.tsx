@@ -17,24 +17,28 @@ import {RootStackParamsList} from './types';
 import configureStore from './redux/configureStore';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
+import {ReduxNetworkProvider} from 'react-native-offline';
 
 const {store, persistor} = configureStore();
-
 const {Navigator, Screen} = createNativeStackNavigator<RootStackParamsList>();
 
-const App = () => {
-  return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
-          <Navigator>
-            <Screen component={Home} name="Home" />
-            <Screen component={Details} name="Details" />
-          </Navigator>
-        </NavigationContainer>
-      </PersistGate>
-    </Provider>
-  );
-};
+const App = () => (
+  <NavigationContainer>
+    <Navigator>
+      <Screen component={Home} name="Home" />
+      <Screen component={Details} name="Details" />
+    </Navigator>
+  </NavigationContainer>
+);
 
-export default App;
+const Root = () => (
+  <Provider store={store}>
+    <ReduxNetworkProvider pingInterval={30000} pingOnlyIfOffline>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
+    </ReduxNetworkProvider>
+  </Provider>
+);
+
+export default Root;
