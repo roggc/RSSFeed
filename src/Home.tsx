@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -17,30 +17,30 @@ import {
   Text,
   View,
 } from 'react-native';
-import {parse, FeedItem} from 'react-native-rss-parser';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import styled from '@emotion/native';
-import {useQuery} from 'react-query';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from './types';
-
-const URL = 'https://www.xatakandroid.com/tag/feeds/rss2.xml';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchRSSFeed} from './redux/actions/rssFeed';
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const {data, isFetching, error} = useSelector(state => state.RSSFeed);
+
+  useEffect(() => {
+    dispatch(fetchRSSFeed());
+  }, [dispatch]);
+
   const isDarkMode = useColorScheme() === 'dark';
-  const {isLoading, error, data} = useQuery<FeedItem[], Error>('rssFeed', () =>
-    fetch(URL)
-      .then(response => response.text())
-      .then(xml => parse(xml))
-      .then(parsed => parsed.items),
-  );
+
   const {navigate} = useNavigation<HomeScreenNavigationProp>();
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <SafeAreaView style={backgroundStyle}>
         <View>
