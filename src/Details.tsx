@@ -1,17 +1,67 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useMemo} from 'react';
+import {Text, Image, Button} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {DetailsScreenRouteProp} from './types';
+import {
+  getImagesSrcAttributesFromDoc,
+  getParagraphsContentFromDoc,
+} from './utils';
+import {DOMParser} from '@xmldom/xmldom';
+import styled from '@emotion/native';
 
 const Details = () => {
   const {
     params: {data},
   } = useRoute<DetailsScreenRouteProp>();
+
+  const docs = useMemo(
+    () => [
+      new DOMParser().parseFromString(
+        '<!doctype html><html><body>'
+          .concat(data.description)
+          .concat('</body></html>'),
+        'text/html',
+      ),
+    ],
+    [data],
+  );
+
   return (
-    <View>
-      <Text>{data && data.title}</Text>
-    </View>
+    <ScreenContainer>
+      <TextContainer>
+        <Text>{data && data.title}</Text>
+      </TextContainer>
+      <TextContainer>
+        <Text>{getParagraphsContentFromDoc(0, docs)[1]}</Text>
+      </TextContainer>
+      <ImgContainer>
+        <StyledImage
+          source={{uri: getImagesSrcAttributesFromDoc(0, docs)[0]}}
+          resizeMode="contain"
+        />
+      </ImgContainer>
+      <Button onPress={() => {}} title="Ver en el navegador" />
+    </ScreenContainer>
   );
 };
+
+const StyledImage = styled(Image)`
+  width: 100%;
+  aspect-ratio: 1.5;
+`;
+
+const ImgContainer = styled.View`
+  border-radius: 10px;
+  border: 1px solid red;
+`;
+
+const ScreenContainer = styled.View`
+  flex: 1;
+  padding: 5px;
+`;
+
+const TextContainer = styled.View`
+  margin-bottom: 10px;
+`;
 
 export default Details;

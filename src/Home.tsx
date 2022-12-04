@@ -28,6 +28,10 @@ import {Dispatch} from './App';
 import {AppState} from './redux/configureStore';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {DOMParser} from '@xmldom/xmldom';
+import {
+  getImagesSrcAttributesFromDoc,
+  getParagraphsContentFromDoc,
+} from './utils';
 
 const StyledFontAwesome5 = styled(FontAwesome5)`
   color: red;
@@ -70,20 +74,6 @@ const Home = () => {
       ),
     [data],
   );
-
-  const getParagraphsContentFromDoc = (index: number) =>
-    Array.prototype.map.call(
-      docs[index].getElementsByTagName('p'),
-      p => p.textContent,
-    );
-
-  const getImagesSrcAttributesFromDoc = (index: number) =>
-    Array.prototype.map.call(docs[index].getElementsByTagName('img'), img => {
-      const srcAttribute = img.getAttribute('src');
-      return srcAttribute[0] === '/'
-        ? 'https:'.concat(srcAttribute)
-        : srcAttribute;
-    });
 
   if (isFetching) {
     return (
@@ -128,12 +118,12 @@ const Home = () => {
               </TextContainer>
               <TextContainer>
                 <Text numberOfLines={2}>
-                  {getParagraphsContentFromDoc(i)[1]}
+                  {getParagraphsContentFromDoc(i, docs)[1]}
                 </Text>
               </TextContainer>
               <ImgContainer>
                 <StyledImage
-                  source={{uri: getImagesSrcAttributesFromDoc(i)[0]}}
+                  source={{uri: getImagesSrcAttributesFromDoc(i, docs)[0]}}
                   resizeMode="contain"
                 />
               </ImgContainer>
