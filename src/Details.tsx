@@ -1,30 +1,20 @@
-import React, {useMemo} from 'react';
-import {Text, Image, Button} from 'react-native';
+import React from 'react';
+import {Text, Button} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {DetailsScreenRouteProp} from './types';
 import {
   getImagesSrcAttributesFromDoc,
   getParagraphsContentFromDoc,
 } from './utils';
-import {DOMParser} from '@xmldom/xmldom';
 import styled from '@emotion/native';
+import {useDocs} from './hooks';
+import {StyledImage} from './shared';
 
 const Details = () => {
   const {
     params: {data},
   } = useRoute<DetailsScreenRouteProp>();
-
-  const docs = useMemo(
-    () => [
-      new DOMParser().parseFromString(
-        '<!doctype html><html><body>'
-          .concat(data.description)
-          .concat('</body></html>'),
-        'text/html',
-      ),
-    ],
-    [data],
-  );
+  const {aspectRatios, docs} = useDocs([data]);
 
   return (
     <ScreenContainer>
@@ -38,6 +28,7 @@ const Details = () => {
         <StyledImage
           source={{uri: getImagesSrcAttributesFromDoc(0, docs)[0]}}
           resizeMode="contain"
+          aspectRatio={aspectRatios[0]}
         />
       </ImgContainer>
       <ButtonContainer>
@@ -46,11 +37,6 @@ const Details = () => {
     </ScreenContainer>
   );
 };
-
-const StyledImage = styled(Image)`
-  width: 100%;
-  aspect-ratio: 1.5;
-`;
 
 const ImgContainer = styled.View`
   margin-bottom: 10px;

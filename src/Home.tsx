@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect, useMemo, ReactNode, FC, useState} from 'react';
+import React, {useEffect, ReactNode, FC} from 'react';
 import {
   StatusBar,
   useColorScheme,
@@ -27,21 +27,15 @@ import {fetchRSSFeed} from './redux/actions/rssFeed';
 import {Dispatch} from './App';
 import {AppState} from './redux/configureStore';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {DOMParser} from '@xmldom/xmldom';
 import {
   getImagesSrcAttributesFromDoc,
   getParagraphsContentFromDoc,
 } from './utils';
+import {useDocs} from './hooks';
+import {StyledImage} from './shared';
 
 const StyledFontAwesome5 = styled(FontAwesome5)`
   color: red;
-`;
-
-const StyledImage = styled(Image)<{aspectRatio: number}>`
-  width: 100%;
-  aspect-ratio: ${aspectRatio => aspectRatio};
-  flex: 1;
-  border-radius: 10px;
 `;
 
 const Home = () => {
@@ -50,7 +44,7 @@ const Home = () => {
     (state: AppState) => state.RSSFeed,
   );
   const {isConnected} = useSelector((state: AppState) => state.network);
-  const [aspectRatios, setAspectRatios] = useState<number[]>([]);
+  const {docs, aspectRatios} = useDocs(data);
 
   useEffect(() => {
     isConnected && dispatch(fetchRSSFeed());
@@ -63,31 +57,6 @@ const Home = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
-  const docs = useMemo(
-    () =>
-      data.map(d =>
-        new DOMParser().parseFromString(
-          '<!doctype html><html><body>'
-            .concat(d.description)
-            .concat('</body></html>'),
-          'text/html',
-        ),
-      ),
-    [data],
-  );
-
-  useEffect(() => {
-    Array.from({length: docs.length}, (_, i) => i)
-      .map(v => getImagesSrcAttributesFromDoc(v, docs)[0])
-      .forEach(
-        uri =>
-          uri &&
-          Image.getSize(uri, (width, height) =>
-            setAspectRatios(aR => [...aR, width / height]),
-          ),
-      );
-  }, [docs]);
 
   if (isFetching) {
     return (
