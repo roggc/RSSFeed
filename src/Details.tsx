@@ -40,7 +40,9 @@ const Details = () => {
           resizeMode="contain"
         />
       </ImgContainer>
-      <Button onPress={() => {}} title="Ver en el navegador" />
+      <ButtonContainer>
+        <Button onPress={() => {}} title="Ver en el navegador" />
+      </ButtonContainer>
     </ScreenContainer>
   );
 };
@@ -51,8 +53,7 @@ const StyledImage = styled(Image)`
 `;
 
 const ImgContainer = styled.View`
-  border-radius: 10px;
-  border: 1px solid red;
+  margin-bottom: 10px;
 `;
 
 const ScreenContainer = styled.View`
@@ -62,6 +63,10 @@ const ScreenContainer = styled.View`
 
 const TextContainer = styled.View`
   margin-bottom: 10px;
+`;
+
+const ButtonContainer = styled.View`
+  align-items: center;
 `;
 
 export default Details;

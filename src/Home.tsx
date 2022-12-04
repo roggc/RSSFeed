@@ -146,10 +146,7 @@ const TextContainer = styled.View`
   margin-bottom: 10px;
 `;
 
-const ImgContainer = styled.View`
-  border-radius: 10px;
-  border: 1px solid red;
-`;
+const ImgContainer = styled.View``;
 
 export default Home;
 

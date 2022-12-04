@@ -8,6 +8,7 @@ import {ThunkDispatch} from 'redux-thunk';
 const persistConfig = {
   storage: AsyncStorage,
   key: 'root',
+  timeout: 10000,
 };
 
 export type AppState = ReturnType<typeof appReducer>;
