@@ -165,5 +165,6 @@ const StyledTextInput = styled.TextInput`
   border-radius: 5px;
   border: 1px solid blue;
   margin-bottom: 10px;
-  paddingvertical: 10px;
+  paddingvertical: 0px;
+  height: 40px;
 `;
