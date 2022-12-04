@@ -8,8 +8,16 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
-import {StatusBar, useColorScheme, ScrollView, Text, View} from 'react-native';
+import React, {useEffect, useMemo, ReactNode, FC} from 'react';
+import {
+  StatusBar,
+  useColorScheme,
+  ScrollView,
+  Text,
+  View,
+  Image,
+  TouchableOpacityProps,
+} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
@@ -19,10 +27,16 @@ import {fetchRSSFeed} from './redux/actions/rssFeed';
 import {Dispatch} from './App';
 import {AppState} from './redux/configureStore';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {DOMParser} from '@xmldom/xmldom';
 
 const StyledFontAwesome5 = styled(FontAwesome5)`
   color: red;
-  width: 20px;
+`;
+
+const StyledImage = styled(Image)`
+  width: 100%;
+  aspect-ratio: 1.5;
+  flex: 1;
 `;
 
 const Home = () => {
@@ -43,6 +57,33 @@ const Home = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const docs = useMemo(
+    () =>
+      data.map(d =>
+        new DOMParser().parseFromString(
+          '<!doctype html><html><body>'
+            .concat(d.description)
+            .concat('</body></html>'),
+          'text/html',
+        ),
+      ),
+    [data],
+  );
+
+  const getParagraphsContentFromDoc = (index: number) =>
+    Array.prototype.map.call(
+      docs[index].getElementsByTagName('p'),
+      p => p.textContent,
+    );
+
+  const getImagesSrcAttributesFromDoc = (index: number) =>
+    Array.prototype.map.call(docs[index].getElementsByTagName('img'), img => {
+      const srcAttribute = img.getAttribute('src');
+      return srcAttribute[0] === '/'
+        ? 'https:'.concat(srcAttribute)
+        : srcAttribute;
+    });
 
   if (isFetching) {
     return (
@@ -72,32 +113,37 @@ const Home = () => {
       )}
       {data && (
         <ScrollView>
-          {data.map(d => (
-            <ItemContainer
+          {data.map((d, i) => (
+            <Card
               key={d.id}
-              onPress={() => navigate('Details', {data: d})}>
-              <StyledFontAwesome5 name="star" solid />
-              <ContentContainer>
-                <TextContainer>
+              onPress={() => {
+                console.log('pressed');
+                navigate('Details', {data: d});
+              }}>
+              <TextContainer>
+                <Text>
+                  <StyledFontAwesome5 name="star" solid />{' '}
                   <Text>{d.title}</Text>
-                </TextContainer>
-                <TextContainer>
-                  <Text>{d.description}</Text>
-                </TextContainer>
-              </ContentContainer>
-            </ItemContainer>
+                </Text>
+              </TextContainer>
+              <TextContainer>
+                <Text numberOfLines={2}>
+                  {getParagraphsContentFromDoc(i)[1]}
+                </Text>
+              </TextContainer>
+              <ImgContainer>
+                <StyledImage
+                  source={{uri: getImagesSrcAttributesFromDoc(i)[0]}}
+                  resizeMode="contain"
+                />
+              </ImgContainer>
+            </Card>
           ))}
         </ScrollView>
       )}
     </View>
   );
 };
-
-const ItemContainer = styled.TouchableOpacity`
-  margin: 10px;
-  flex-direction: row;
-  align-items: center;
-`;
 
 const ErrorContainer = styled.View`
   border: 1px solid red;
@@ -108,8 +154,27 @@ const TextContainer = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
   flex: 1;
+  margin-bottom: 10px;
 `;
 
-const ContentContainer = styled.View``;
+const ImgContainer = styled.View`
+  border-radius: 10px;
+  border: 1px solid red;
+`;
 
 export default Home;
+
+interface CardProps extends TouchableOpacityProps {
+  children: ReactNode;
+}
+
+const Card: FC<CardProps> = ({children, ...props}) => (
+  <CardContainer {...props}>{children}</CardContainer>
+);
+
+const CardContainer = styled.TouchableOpacity`
+  border: 1px solid blue;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
+`;
