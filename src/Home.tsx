@@ -21,7 +21,7 @@ import {AppState} from './redux/configureStore';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const StyledFontAwesome5 = styled(FontAwesome5)`
-  color: blue;
+  color: red;
   width: 20px;
 `;
 
@@ -77,9 +77,14 @@ const Home = () => {
               key={d.id}
               onPress={() => navigate('Details', {data: d})}>
               <StyledFontAwesome5 name="star" solid />
-              <TextContainer>
-                <Text>{d.title}</Text>
-              </TextContainer>
+              <ContentContainer>
+                <TextContainer>
+                  <Text>{d.title}</Text>
+                </TextContainer>
+                <TextContainer>
+                  <Text>{d.description}</Text>
+                </TextContainer>
+              </ContentContainer>
             </ItemContainer>
           ))}
         </ScrollView>
@@ -104,5 +109,7 @@ const TextContainer = styled.View`
   flex-wrap: wrap;
   flex: 1;
 `;
+
+const ContentContainer = styled.View``;
 
 export default Home;

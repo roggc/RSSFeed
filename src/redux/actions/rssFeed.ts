@@ -4,11 +4,11 @@ import {
   FETCH_RSSFEED_FAILURE,
 } from '../constants';
 import {parse, FeedItem} from 'react-native-rss-parser';
-import {AppDispatch} from '../configureStore';
+import {Dispatch} from '../../App';
 
 const RSSFEED_URL = 'https://www.xatakandroid.com/tag/feeds/rss2.xml';
 
-export const fetchRSSFeed = () => (dispatch: AppDispatch) => {
+export const fetchRSSFeed = () => (dispatch: Dispatch) => {
   dispatch(getRSSFeedIsFetching());
   fetch(RSSFEED_URL)
     .then(response => response.text())
