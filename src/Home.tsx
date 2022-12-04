@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect, useMemo, ReactNode, FC} from 'react';
+import React, {useEffect, useMemo, ReactNode, FC, useState} from 'react';
 import {
   StatusBar,
   useColorScheme,
@@ -37,10 +37,11 @@ const StyledFontAwesome5 = styled(FontAwesome5)`
   color: red;
 `;
 
-const StyledImage = styled(Image)`
+const StyledImage = styled(Image)<{aspectRatio: number}>`
   width: 100%;
-  aspect-ratio: 1.5;
+  aspect-ratio: ${aspectRatio => aspectRatio};
   flex: 1;
+  border-radius: 10px;
 `;
 
 const Home = () => {
@@ -49,6 +50,7 @@ const Home = () => {
     (state: AppState) => state.RSSFeed,
   );
   const {isConnected} = useSelector((state: AppState) => state.network);
+  const [aspectRatios, setAspectRatios] = useState<number[]>([]);
 
   useEffect(() => {
     isConnected && dispatch(fetchRSSFeed());
@@ -74,6 +76,18 @@ const Home = () => {
       ),
     [data],
   );
+
+  useEffect(() => {
+    Array.from({length: docs.length}, (_, i) => i)
+      .map(v => getImagesSrcAttributesFromDoc(v, docs)[0])
+      .forEach(
+        uri =>
+          uri &&
+          Image.getSize(uri, (width, height) =>
+            setAspectRatios(aR => [...aR, width / height]),
+          ),
+      );
+  }, [docs]);
 
   if (isFetching) {
     return (
@@ -120,12 +134,11 @@ const Home = () => {
                   {getParagraphsContentFromDoc(i, docs)[1]}
                 </Text>
               </TextContainer>
-              <ImgContainer>
-                <StyledImage
-                  source={{uri: getImagesSrcAttributesFromDoc(i, docs)[0]}}
-                  resizeMode="contain"
-                />
-              </ImgContainer>
+              <StyledImage
+                source={{uri: getImagesSrcAttributesFromDoc(i, docs)[0]}}
+                resizeMode="contain"
+                aspectRatio={aspectRatios[i]}
+              />
             </Card>
           ))}
         </ScrollView>
@@ -145,8 +158,6 @@ const TextContainer = styled.View`
   flex: 1;
   margin-bottom: 10px;
 `;
-
-const ImgContainer = styled.View``;
 
 export default Home;
 
