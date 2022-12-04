@@ -35,7 +35,14 @@ const App = () => (
 
 const Root = () => (
   <Provider store={store}>
-    <ReduxNetworkProvider pingInterval={30000} pingOnlyIfOffline>
+    <ReduxNetworkProvider
+      pingInterval={30000}
+      pingOnlyIfOffline
+      pingTimeout={10000}
+      pingServerUrl="https://www.google.com/"
+      shouldPing
+      pingInBackground={false}
+      httpMethod={'HEAD'}>
       <PersistGate loading={null} persistor={persistor}>
         <App />
       </PersistGate>
