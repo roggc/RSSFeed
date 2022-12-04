@@ -15,7 +15,6 @@ import {
   ScrollView,
   Text,
   View,
-  Image,
   TouchableOpacityProps,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
