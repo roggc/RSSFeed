@@ -1,1 +1,1 @@
-export * from './styled-image';
+export * from './styled-components';

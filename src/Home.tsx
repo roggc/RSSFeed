@@ -31,7 +31,7 @@ import {
   getParagraphsContentFromDoc,
 } from './utils';
 import {useDocs} from './hooks';
-import {StyledImage} from './shared';
+import {StyledImage, ScreenContainer} from './shared';
 
 const StyledFontAwesome5 = styled(FontAwesome5)`
   color: red;
@@ -68,11 +68,12 @@ const Home = () => {
   }
 
   return (
-    <View style={backgroundStyle}>
+    <ScreenContainer style={backgroundStyle}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+      <StyledTextInput />
       {!isConnected && (
         <View>
           <Text>you are offline</Text>
@@ -111,7 +112,7 @@ const Home = () => {
           ))}
         </ScrollView>
       )}
-    </View>
+    </ScreenContainer>
   );
 };
 
@@ -140,6 +141,13 @@ const Card: FC<CardProps> = ({children, ...props}) => (
 const CardContainer = styled.TouchableOpacity`
   border: 1px solid blue;
   border-radius: 10px;
-  padding: 5px;
-  margin: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+`;
+
+const StyledTextInput = styled.TextInput`
+  border-radius: 5px;
+  border: 1px solid blue;
+  margin-bottom: 10px;
+  paddingvertical: 10px;
 `;

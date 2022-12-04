@@ -8,7 +8,7 @@ import {
 } from './utils';
 import styled from '@emotion/native';
 import {useDocs} from './hooks';
-import {StyledImage} from './shared';
+import {StyledImage, ScreenContainer} from './shared';
 
 const Details = () => {
   const {
@@ -40,11 +40,6 @@ const Details = () => {
 
 const ImgContainer = styled.View`
   margin-bottom: 10px;
-`;
-
-const ScreenContainer = styled.View`
-  flex: 1;
-  padding: 5px;
 `;
 
 const TextContainer = styled.View`
