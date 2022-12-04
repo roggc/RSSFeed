@@ -107,7 +107,6 @@ const Home = () => {
             <Card
               key={d.id}
               onPress={() => {
-                console.log('pressed');
                 navigate('Details', {data: d});
               }}>
               <TextContainer>
