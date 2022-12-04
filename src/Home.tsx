@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect, ReactNode, FC} from 'react';
+import React, {useEffect, ReactNode, FC, useState} from 'react';
 import {
   StatusBar,
   useColorScheme,
@@ -30,12 +30,15 @@ import {
   getImagesSrcAttributesFromDoc,
   getParagraphsContentFromDoc,
 } from './utils';
-import {useDocs} from './hooks';
+import {useDocs, useDebounce} from './hooks';
 import {StyledImage, ScreenContainer} from './shared';
+import {FeedItem} from 'react-native-rss-parser';
 
 const StyledFontAwesome5 = styled(FontAwesome5)`
   color: red;
 `;
+
+const DEBOUNCE_TIME = 1000;
 
 const Home = () => {
   const dispatch = useDispatch<Dispatch>();
@@ -44,6 +47,9 @@ const Home = () => {
   );
   const {isConnected} = useSelector((state: AppState) => state.network);
   const {docs, aspectRatios} = useDocs(data);
+  const [searchText, setSearchText] = useState<string>('');
+  const debounce = useDebounce();
+  const [filteredData, setFilteredData] = useState<FeedItem[]>(data);
 
   useEffect(() => {
     isConnected && dispatch(fetchRSSFeed());
@@ -56,6 +62,16 @@ const Home = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  useEffect(() => {
+    setFilteredData(
+      !searchText
+        ? data
+        : data.filter(d =>
+            d.title.toLowerCase().includes(searchText.toLowerCase()),
+          ),
+    );
+  }, [searchText, data]);
 
   if (isFetching) {
     return (
@@ -73,7 +89,7 @@ const Home = () => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <StyledTextInput />
+      <StyledTextInput onChangeText={debounce(setSearchText, DEBOUNCE_TIME)} />
       {!isConnected && (
         <View>
           <Text>you are offline</Text>
@@ -84,9 +100,9 @@ const Home = () => {
           <Text>{error.message}</Text>
         </ErrorContainer>
       )}
-      {data && (
+      {filteredData && (
         <ScrollView>
-          {data.map((d, i) => (
+          {filteredData.map((d, i) => (
             <Card
               key={d.id}
               onPress={() => {
