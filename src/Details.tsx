@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Button} from 'react-native';
+import {Text, Button, ScrollView} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {DetailsScreenRouteProp} from './types';
 import {
@@ -8,7 +8,7 @@ import {
 } from './utils';
 import styled from '@emotion/native';
 import {useDocs} from './hooks';
-import {StyledImage, ScreenContainer} from './shared';
+import {StyledImage, ScreenContainer, StyledFontAwesome5} from './shared';
 
 const Details = () => {
   const {
@@ -18,22 +18,33 @@ const Details = () => {
 
   return (
     <ScreenContainer>
-      <TextContainer>
-        <Text>{data && data.title}</Text>
-      </TextContainer>
-      <TextContainer>
-        <Text>{getParagraphsContentFromDoc(0, docs)[1]}</Text>
-      </TextContainer>
-      <ImgContainer>
-        <StyledImage
-          source={{uri: getImagesSrcAttributesFromDoc(0, docs)[0]}}
-          resizeMode="contain"
-          aspectRatio={aspectRatios[0]}
-        />
-      </ImgContainer>
-      <ButtonContainer>
-        <Button onPress={() => {}} title="Ver en el navegador" />
-      </ButtonContainer>
+      <ScrollView>
+        <TextContainer>
+          <Text>
+            <StyledFontAwesome5 name="star" solid />{' '}
+            <Text>{data && data.title}</Text>
+          </Text>
+        </TextContainer>
+        {getParagraphsContentFromDoc(0, docs)
+          .slice(1)
+          .map((p, i) => (
+            <TextContainer key={`${p}_${i}`}>
+              <Text>{p}</Text>
+            </TextContainer>
+          ))}
+        {getImagesSrcAttributesFromDoc(0, docs).map((uri, i) => (
+          <ImgContainer key={`${uri}_${i}`}>
+            <StyledImage
+              source={{uri}}
+              resizeMode="contain"
+              aspectRatio={aspectRatios[i]}
+            />
+          </ImgContainer>
+        ))}
+        <ButtonContainer>
+          <Button onPress={() => {}} title="Ver en el navegador" />
+        </ButtonContainer>
+      </ScrollView>
     </ScreenContainer>
   );
 };

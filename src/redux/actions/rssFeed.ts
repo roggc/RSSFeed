@@ -6,7 +6,7 @@ import {
 import {parse, FeedItem} from 'react-native-rss-parser';
 import {Dispatch} from '../../App';
 
-type ExtendedFeedItem = FeedItem & {date: Date};
+type ExtendedFeedItem = FeedItem & {time: number};
 
 const RSSFEED_URL = 'https://www.xatakandroid.com/tag/feeds/rss2.xml';
 
@@ -19,8 +19,8 @@ export const fetchRSSFeed = () => (dispatch: Dispatch) => {
       dispatch(
         getRSSFeedSuccess(
           parsed.items
-            .map(i => ({...i, date: new Date(i.published)}))
-            .sort((a, b) => b.date.getTime() - a.date.getTime()),
+            .map(i => ({...i, time: new Date(i.published).getTime()}))
+            .sort((a, b) => b.time - a.time),
         ),
       ),
     )

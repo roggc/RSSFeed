@@ -25,7 +25,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchRSSFeed} from './redux/actions/rssFeed';
 import {Dispatch} from './App';
 import {AppState} from './redux/configureStore';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {
   getImagesSrcAttributesFromDoc,
   getParagraphsContentFromDoc,
@@ -33,10 +32,7 @@ import {
 import {useDocs, useDebounce} from './hooks';
 import {StyledImage, ScreenContainer} from './shared';
 import {FeedItem} from 'react-native-rss-parser';
-
-const StyledFontAwesome5 = styled(FontAwesome5)`
-  color: red;
-`;
+import {StyledFontAwesome5} from './shared';
 
 const DEBOUNCE_TIME = 1000;
 
