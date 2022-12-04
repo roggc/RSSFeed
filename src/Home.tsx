@@ -18,6 +18,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchRSSFeed} from './redux/actions/rssFeed';
 import {Dispatch} from './App';
 import {AppState} from './redux/configureStore';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
+const StyledFontAwesome5 = styled(FontAwesome5)`
+  color: blue;
+  width: 20px;
+`;
 
 const Home = () => {
   const dispatch = useDispatch<Dispatch>();
@@ -70,7 +76,10 @@ const Home = () => {
             <ItemContainer
               key={d.id}
               onPress={() => navigate('Details', {data: d})}>
-              <Text>{d.title}</Text>
+              <StyledFontAwesome5 name="star" solid />
+              <TextContainer>
+                <Text>{d.title}</Text>
+              </TextContainer>
             </ItemContainer>
           ))}
         </ScrollView>
@@ -81,11 +90,19 @@ const Home = () => {
 
 const ItemContainer = styled.TouchableOpacity`
   margin: 10px;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const ErrorContainer = styled.View`
   border: 1px solid red;
   border-radius: 2px;
+`;
+
+const TextContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex: 1;
 `;
 
 export default Home;
