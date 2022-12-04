@@ -1,14 +1,11 @@
 import {useRef} from 'react';
 
 export const useDebounce = () => {
-  const timeoutIdRef = useRef<number>();
+  const timeoutIdRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const debounce =
-    (func: (...args: any[]) => void, time: number) =>
+  return (func: (...args: any[]) => void, time: number) =>
     (...args: any[]) => {
       timeoutIdRef.current && clearTimeout(timeoutIdRef.current);
       timeoutIdRef.current = setTimeout(func, time, ...args);
     };
-
-  return debounce;
 };
