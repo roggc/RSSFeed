@@ -4,7 +4,7 @@ import {
   FETCH_RSSFEED_FAILURE,
 } from '../constants';
 import {parse, FeedItem} from 'react-native-rss-parser';
-import {Dispatch} from '../../App';
+import {Dispatch} from '../configureStore';
 
 type ExtendedFeedItem = FeedItem & {time: number};
 

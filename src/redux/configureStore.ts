@@ -16,11 +16,10 @@ type DispatchFunction = ThunkDispatch<AppState, any, AnyAction>;
 
 const persistedReducer = persistReducer(persistConfig, appReducer);
 
-export default () => {
-  const store = createStore(
-    persistedReducer,
-    applyMiddleware<DispatchFunction, AppState>(thunk),
-  );
-  const persistor = persistStore(store);
-  return {store, persistor};
-};
+const store = createStore(
+  persistedReducer,
+  applyMiddleware<DispatchFunction, AppState>(thunk),
+);
+const persistor = persistStore(store);
+export type Dispatch = typeof store.dispatch;
+export {store, persistor};

@@ -23,8 +23,7 @@ import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from './types';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchRSSFeed} from './redux/actions/rssFeed';
-import {Dispatch} from './App';
-import {AppState} from './redux/configureStore';
+import {AppState, Dispatch} from './redux/configureStore';
 import {
   getImagesSrcAttributesFromDoc,
   getParagraphsContentFromDoc,

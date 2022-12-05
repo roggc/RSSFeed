@@ -14,15 +14,12 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from './Home';
 import Details from './Details';
 import {RootStackParamsList} from './types';
-import configureStore from './redux/configureStore';
+import {store, persistor} from './redux/configureStore';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {ReduxNetworkProvider} from 'react-native-offline';
 
-const {store, persistor} = configureStore();
 const {Navigator, Screen} = createNativeStackNavigator<RootStackParamsList>();
-
-export type Dispatch = typeof store.dispatch;
 
 const App = () => (
   <NavigationContainer>
