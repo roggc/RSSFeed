@@ -21,7 +21,7 @@ export const useDocs = (data: FeedItem[]) => {
 
   useEffect(() => {
     Array.from({length: docs.length}, (_, i) => i)
-      .map(v => getImagesSrcAttributesFromDoc(v, docs)[0])
+      .map(v => getImagesSrcAttributesFromDoc(docs[v])[0])
       .forEach(
         uri =>
           uri &&

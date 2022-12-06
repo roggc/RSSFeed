@@ -4,21 +4,15 @@ const mapArrayLike = <T, U>(
   thisArg?: any,
 ): U[] => Array.prototype.map.call(array, callback, thisArg) as U[];
 
-export const getParagraphsContentFromDoc = (
-  index: number,
-  documents: Document[],
-) =>
+export const getParagraphsContentFromDoc = (document: Document) =>
   mapArrayLike<HTMLParagraphElement, string | null>(
-    documents[index].getElementsByTagName('p'),
+    document.getElementsByTagName('p'),
     p => p.textContent,
   );
 
-export const getImagesSrcAttributesFromDoc = (
-  index: number,
-  documents: Document[],
-) =>
+export const getImagesSrcAttributesFromDoc = (document: Document) =>
   mapArrayLike<HTMLImageElement, string | undefined>(
-    documents[index].getElementsByTagName('img'),
+    document.getElementsByTagName('img'),
     img => {
       const srcAttribute = img.getAttribute('src');
       if (srcAttribute) {

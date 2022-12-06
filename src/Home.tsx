@@ -70,11 +70,11 @@ const Home = () => {
 
   if (isFetching) {
     return (
-      <View style={backgroundStyle}>
+      <ScreenContainer style={backgroundStyle}>
         <View>
           <Text>loading...</Text>
         </View>
-      </View>
+      </ScreenContainer>
     );
   }
 
@@ -112,11 +112,11 @@ const Home = () => {
               </TextContainer>
               <TextContainer>
                 <Text numberOfLines={2}>
-                  {getParagraphsContentFromDoc(i, docs)[1]}
+                  {getParagraphsContentFromDoc(docs[i])[1]}
                 </Text>
               </TextContainer>
               <StyledImage
-                source={{uri: getImagesSrcAttributesFromDoc(i, docs)[0]}}
+                source={{uri: getImagesSrcAttributesFromDoc(docs[i])[0]}}
                 resizeMode="contain"
                 aspectRatio={aspectRatios[i]}
               />

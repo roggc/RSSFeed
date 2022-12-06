@@ -25,14 +25,14 @@ const Details = () => {
             <Text>{data && data.title}</Text>
           </Text>
         </TextContainer>
-        {getParagraphsContentFromDoc(0, docs)
+        {getParagraphsContentFromDoc(docs[0])
           .slice(1)
           .map((p, i) => (
             <TextContainer key={`${p}_${i}`}>
               <Text>{p}</Text>
             </TextContainer>
           ))}
-        {getImagesSrcAttributesFromDoc(0, docs).map((uri, i) => (
+        {getImagesSrcAttributesFromDoc(docs[0]).map((uri, i) => (
           <ImgContainer key={`${uri}_${i}`}>
             <StyledImage
               source={{uri}}
