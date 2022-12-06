@@ -2,7 +2,12 @@ import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 import mockXml from './__mocks__/xml-mock';
 import {Image} from 'react-native';
+import mockBackHandler from 'react-native/Libraries/Utilities/__mocks__/BackHandler.js';
 
+jest.mock(
+  'react-native/Libraries/Utilities/BackHandler',
+  () => mockBackHandler,
+);
 jest.mock('@react-native-community/netinfo', () => mockRNCNetInfo);
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
