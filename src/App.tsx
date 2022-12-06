@@ -18,14 +18,35 @@ import {store, persistor} from './redux/configureStore';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {ReduxNetworkProvider} from 'react-native-offline';
+import styled from '@emotion/native';
 
 const {Navigator, Screen} = createNativeStackNavigator<RootStackParamsList>();
 
 const App = () => (
   <NavigationContainer>
     <Navigator>
-      <Screen component={Home} name="Home" />
-      <Screen component={Details} name="Details" />
+      <Screen
+        component={Home}
+        name="Home"
+        options={{
+          headerTitle: props => (
+            <BoldText {...props} testID="screen-header-title">
+              Home
+            </BoldText>
+          ),
+        }}
+      />
+      <Screen
+        component={Details}
+        name="Details"
+        options={{
+          headerTitle: props => (
+            <BoldText {...props} testID="screen-header-title">
+              Details
+            </BoldText>
+          ),
+        }}
+      />
     </Navigator>
   </NavigationContainer>
 );
@@ -46,5 +67,9 @@ const Root = () => (
     </ReduxNetworkProvider>
   </Provider>
 );
+
+const BoldText = styled.Text`
+  font-weight: 700;
+`;
 
 export default Root;
