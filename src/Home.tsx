@@ -99,6 +99,7 @@ const Home = () => {
         <ScrollView>
           {filteredData.map((d, i) => (
             <Card
+              testID="card"
               key={d.id}
               onPress={() => {
                 navigate('Details', {data: d});
