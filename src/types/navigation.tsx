@@ -1,11 +1,18 @@
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {FeedItem} from 'react-native-rss-parser';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 
 export type RootStackParamsList = {
   Home: undefined;
-  Details: {data: FeedItem};
+  Details: undefined;
 };
+
+export type DetailsScreenProps = NativeStackScreenProps<
+  RootStackParamsList,
+  'Details'
+>;
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamsList,

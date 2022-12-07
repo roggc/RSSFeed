@@ -3,6 +3,7 @@ import {
   FETCHING_RSSFEED,
   FETCH_RSSFEED_SUCCESS,
   FETCH_RSSFEED_FAILURE,
+  SET_SELECTED_DATA,
 } from '../constants';
 import {RSSFeedAction} from '../actions/rssFeed';
 
@@ -10,6 +11,7 @@ const initialState: RssFeed = {
   data: [],
   isFetching: false,
   error: null,
+  selectedData: {document: '', title: '', aspectRatios: []},
 };
 
 export default (state = initialState, action: RSSFeedAction) => {
@@ -28,6 +30,11 @@ export default (state = initialState, action: RSSFeedAction) => {
         ...state,
         isFetching: false,
         error: action.error,
+      };
+    case SET_SELECTED_DATA:
+      return {
+        ...state,
+        selectedData: {...state.selectedData, ...action.data},
       };
     default:
       return state;

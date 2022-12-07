@@ -1,38 +1,46 @@
-import React from 'react';
+import React, {FC, useMemo} from 'react';
 import {Text, Button, ScrollView} from 'react-native';
-import {useRoute} from '@react-navigation/native';
-import {DetailsScreenRouteProp} from './types';
 import {
   getImagesSrcAttributesFromDoc,
   getParagraphsContentFromDoc,
 } from './utils';
 import styled from '@emotion/native';
-import {useDocs} from './hooks';
 import {StyledImage, ScreenContainer, StyledFontAwesome5} from './shared';
+import {DetailsScreenProps} from './types';
+import {useSelector} from 'react-redux';
+import {AppState} from './redux/configureStore';
+import {DOMParser} from '@xmldom/xmldom';
 
-const Details = () => {
+const Details: FC<DetailsScreenProps> = () => {
   const {
-    params: {data},
-  } = useRoute<DetailsScreenRouteProp>();
-  const {aspectRatios, docs} = useDocs([data]);
+    selectedData: {document, title, aspectRatios},
+  } = useSelector((state: AppState) => state.RSSFeed);
+
+  const xmlDocument = useMemo(
+    () => new DOMParser().parseFromString(document),
+    [document],
+  );
+
+  if (!document) {
+    return null;
+  }
 
   return (
     <ScreenContainer>
       <ScrollView>
         <TextContainer>
           <Text>
-            <StyledFontAwesome5 name="star" solid />{' '}
-            <Text>{data && data.title}</Text>
+            <StyledFontAwesome5 name="star" solid /> <Text>{title}</Text>
           </Text>
         </TextContainer>
-        {getParagraphsContentFromDoc(docs[0])
+        {getParagraphsContentFromDoc(xmlDocument)
           .slice(1)
           .map((p, i) => (
             <TextContainer key={`${p}_${i}`}>
               <Text>{p}</Text>
             </TextContainer>
           ))}
-        {getImagesSrcAttributesFromDoc(docs[0]).map((uri, i) => (
+        {getImagesSrcAttributesFromDoc(xmlDocument).map((uri, i) => (
           <ImgContainer key={`${uri}_${i}`}>
             <StyledImage
               source={{uri}}

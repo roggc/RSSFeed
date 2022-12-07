@@ -2,9 +2,11 @@ import {
   FETCHING_RSSFEED,
   FETCH_RSSFEED_SUCCESS,
   FETCH_RSSFEED_FAILURE,
+  SET_SELECTED_DATA,
 } from '../constants';
 import {parse, FeedItem} from 'react-native-rss-parser';
 import {Dispatch} from '../configureStore';
+import {SelectedData} from '../../types';
 
 type ExtendedFeedItem = FeedItem & {time: number};
 
@@ -33,11 +35,16 @@ const getRSSFeedSuccess = (data: ExtendedFeedItem[]) =>
 const getRSSFeedFailure = (error: Error) =>
   ({type: FETCH_RSSFEED_FAILURE, error} as const);
 
+export const setSelectedData = (data: SelectedData) =>
+  ({type: SET_SELECTED_DATA, data} as const);
+
 type RSSFeedSuccessAction = ReturnType<typeof getRSSFeedSuccess>;
 type RSSFeedIsFetchingAction = ReturnType<typeof getRSSFeedIsFetching>;
 type RSSFeedFailureAction = ReturnType<typeof getRSSFeedFailure>;
+type SetSelectedDataAction = ReturnType<typeof setSelectedData>;
 
 export type RSSFeedAction =
   | RSSFeedFailureAction
   | RSSFeedIsFetchingAction
-  | RSSFeedSuccessAction;
+  | RSSFeedSuccessAction
+  | SetSelectedDataAction;

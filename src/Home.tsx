@@ -22,16 +22,16 @@ import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from './types';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchRSSFeed} from './redux/actions/rssFeed';
+import {fetchRSSFeed, setSelectedData} from './redux/actions/rssFeed';
 import {AppState, Dispatch} from './redux/configureStore';
 import {
   getImagesSrcAttributesFromDoc,
   getParagraphsContentFromDoc,
 } from './utils';
-import {useDocs, useDebounce} from './hooks';
+import {useDocuments, useDebounce} from './hooks';
 import {StyledImage, ScreenContainer} from './shared';
-import {FeedItem} from 'react-native-rss-parser';
 import {StyledFontAwesome5} from './shared';
+import {XMLSerializer} from '@xmldom/xmldom';
 
 const DEBOUNCE_TIME = 1000;
 
@@ -41,10 +41,12 @@ const Home = () => {
     (state: AppState) => state.RSSFeed,
   );
   const {isConnected} = useSelector((state: AppState) => state.network);
-  const {docs, aspectRatios} = useDocs(data);
+  const {documents, aspectRatios, titles, ids} = useDocuments(data);
   const [searchText, setSearchText] = useState<string>('');
   const debounce = useDebounce();
-  const [filteredData, setFilteredData] = useState<FeedItem[]>(data);
+  const [indexes, setIndexes] = useState<number[]>(
+    Array.from({length: documents.length}, (_, i) => i),
+  );
 
   useEffect(() => {
     isConnected && dispatch(fetchRSSFeed());
@@ -59,14 +61,17 @@ const Home = () => {
   };
 
   useEffect(() => {
-    setFilteredData(
+    setIndexes(
       !searchText
-        ? data
-        : data.filter(d =>
-            d.title.toLowerCase().includes(searchText.toLowerCase()),
-          ),
+        ? titles.map((_, i) => i)
+        : titles.reduce((res, t, i) => {
+            if (t.toLowerCase().includes(searchText.toLowerCase())) {
+              return [...res, i];
+            }
+            return res;
+          }, [] as number[]),
     );
-  }, [searchText, data]);
+  }, [searchText, titles]);
 
   if (isFetching) {
     return (
@@ -95,30 +100,39 @@ const Home = () => {
           <Text>{error.message}</Text>
         </ErrorContainer>
       )}
-      {filteredData && (
+      {indexes && (
         <ScrollView>
-          {filteredData.map((d, i) => (
+          {indexes.map(v => (
             <Card
               testID="card"
-              key={d.id}
+              key={ids[v]}
               onPress={() => {
-                navigate('Details', {data: d});
+                dispatch(
+                  setSelectedData({
+                    document: new XMLSerializer().serializeToString(
+                      documents[v],
+                    ),
+                    aspectRatios: aspectRatios[v],
+                    title: titles[v],
+                  }),
+                );
+                navigate('Details');
               }}>
               <TextContainer>
                 <Text>
                   <StyledFontAwesome5 name="star" solid />{' '}
-                  <Text>{d.title}</Text>
+                  <Text>{titles[v]}</Text>
                 </Text>
               </TextContainer>
               <TextContainer>
                 <Text numberOfLines={2}>
-                  {getParagraphsContentFromDoc(docs[i])[1]}
+                  {getParagraphsContentFromDoc(documents[v])[1]}
                 </Text>
               </TextContainer>
               <StyledImage
-                source={{uri: getImagesSrcAttributesFromDoc(docs[i])[0]}}
+                source={{uri: getImagesSrcAttributesFromDoc(documents[v])[0]}}
                 resizeMode="contain"
-                aspectRatio={aspectRatios[i]}
+                aspectRatio={aspectRatios[v]?.[0]}
               />
             </Card>
           ))}
@@ -150,7 +164,7 @@ const Card: FC<CardProps> = ({children, ...props}) => (
   <CardContainer {...props}>{children}</CardContainer>
 );
 
-const CardContainer = styled.TouchableOpacity`
+const CardContainer = styled.Pressable`
   border: 1px solid blue;
   border-radius: 10px;
   padding: 10px;

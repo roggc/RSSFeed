@@ -1,2 +1,2 @@
-export * from './useDocs';
+export * from './useDocuments';
 export * from './useDebounce';
